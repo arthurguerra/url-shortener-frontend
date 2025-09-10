@@ -5,15 +5,27 @@ function App() {
   const [urls, setUrls] = useState([])
   const [newUrl, setNewUrl] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [pagination, setPagination] = useState({
+    page: 0,
+    size: 10,
+    totalPages: 0,
+    totalElements: 0
+  });
 
   useEffect(() => {
     fetchUrls();
   }, []);
 
-  const fetchUrls = () => {
-    api.get("/links")
+  const fetchUrls = (page = 0, size = 10) => {
+    api.get(`/links?page=${page}&size=${size}`)
     .then((response) => {
       setUrls(response.data.content);
+      setPagination({
+        page: response.data.number,
+        size: response.data.size,
+        totalPages: response.data.totalPages,
+        totalElements: response.data.totalElements
+      });
     })
     .catch((error) => {
       console.log('API error:', error);
@@ -31,6 +43,10 @@ function App() {
     .catch((error) => {
       setErrorMessage(error.response?.data?.message || 'An error occurred');
     })
+  }
+
+  const handlePageSizeChange = (newSize) => {
+    fetchUrls(0, newSize);
   }
 
   return (
@@ -51,6 +67,20 @@ function App() {
           {errorMessage}
         </div>
       )}
+
+      <div style={{margin: '10px 0'}}>
+        Show: 
+        <select 
+          value={pagination.size} 
+          onChange={(e) => handlePageSizeChange(Number(e.target.value))}
+          style={{margin: '0 10px'}}
+        >
+          <option value={10}>10</option>
+          <option value={20}>20</option>
+          <option value={50}>50</option>
+        </select>
+        results per page
+      </div>
 
       <table>
         <thead>
@@ -74,6 +104,24 @@ function App() {
           ))}
         </tbody>
       </table>
+
+      <div style={{margin: '10px 0', textAlign: 'center'}}>
+        <button 
+          onClick={() => fetchUrls(pagination.page - 1, pagination.size)}
+          disabled={pagination.page === 0}
+        >
+          Previous
+        </button>
+        <span style={{margin: '0 15px'}}>
+          Page {pagination.page + 1} of {pagination.totalPages}
+        </span>
+        <button 
+          onClick={() => fetchUrls(pagination.page + 1, pagination.size)}
+          disabled={pagination.page >= pagination.totalPages - 1}
+        >
+          Next
+        </button>
+      </div>
     </div>
   )
 }
