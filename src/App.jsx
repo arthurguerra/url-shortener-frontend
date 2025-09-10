@@ -106,7 +106,11 @@ function App() {
                   {url.originalUrl}
                 </a>
               </td>
-              <td>{url.shortUrl}</td>
+              <td>
+                <a href={`http://localhost:8080/${url.shortUrl}`} target='_blank'>
+                  {url.shortUrl}
+                </a>
+              </td>
               <td>{url.clicks}</td>
             </tr>
           ))}
