@@ -81,6 +81,7 @@ function App() {
       <table>
         <thead>
           <tr>
+            <th>Created At</th>
             <th>Original URL</th>
             <th>Shortened URL</th>
             <th 
@@ -94,6 +95,7 @@ function App() {
         <tbody>
           {urls && urls.map((url) => (
             <tr key={url.shortUrl}>
+              <td>{url.createdAt}</td>
               <td>
                 <a href={url.originalUrl} target='_blank'>
                   {url.originalUrl}
