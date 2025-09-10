@@ -15,6 +15,7 @@ function App() {
     sortBy: 'createdAt',
     sortDirection: 'DESC'
   });
+  const [selectedLogs, setSelectedLogs] = useState(null);
 
   useEffect(() => {
     fetchUrls();
@@ -59,6 +60,16 @@ function App() {
     fetchUrls(0, pagination.size, field, newDirection);
   }
 
+  const fetchLogs = (shortCode) => {
+    api.get(`/log/${shortCode}`)
+    .then((response) => {
+      setSelectedLogs(response.data);
+    })
+    .catch((error) => {
+      console.log('Logs error:', error);
+    })
+  }
+
   return (
     <div>
       <h1>URL Shortener</h1>
@@ -95,6 +106,7 @@ function App() {
             >
               Clicks {sorting.sortBy === 'clicks' && (sorting.sortDirection === 'ASC' ? '↑' : '↓')}
             </th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -112,6 +124,14 @@ function App() {
                 </a>
               </td>
               <td>{url.clicks}</td>
+              <td>
+                <button 
+                  onClick={() => fetchLogs(url.shortUrl)}
+                  disabled={url.clicks === 0}
+                >
+                  View Logs
+                </button>
+              </td>
             </tr>
           ))}
         </tbody>
@@ -154,6 +174,42 @@ function App() {
           results
         </div>
       </div>
+
+
+      {selectedLogs && (
+        <div style={{margin: '20px 0'}}>
+          <h3>Access Logs for {selectedLogs.shortUrl}</h3>
+          <p>Original URL: <a href={selectedLogs.originalUrl} target='_blank'>{selectedLogs.originalUrl}</a></p>
+          <p>Total Clicks: {selectedLogs.clicks}</p>
+          
+          {selectedLogs.logs.length === 0 ? (
+            <p>No logs found</p>
+          ): (
+          <table>
+            <thead>
+              <tr>
+                <th>IP Address</th>
+                <th>User Agent</th>
+                <th>Accessed At</th>
+              </tr>
+            </thead>
+            <tbody>
+              {selectedLogs.logs.map((log, index) => (
+                <tr key={index}>
+                  <td>{log.ip}</td>
+                  <td>{log.userAgent}</td>
+                  <td>{new Date(log.accessedAt).toLocaleString()}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          )}
+          
+          <button onClick={() => setSelectedLogs(null)} style={{margin: '10px 0'}}>
+            Close Logs
+          </button>
+        </div>
+      )}
     </div>
   )
 }
