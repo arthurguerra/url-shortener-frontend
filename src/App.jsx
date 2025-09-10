@@ -4,6 +4,7 @@ import api from './api'
 function App() {
   const [urls, setUrls] = useState([])
   const [newUrl, setNewUrl] = useState('');
+  const [customCode, setCustomCode] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [pagination, setPagination] = useState({
     page: 0,
@@ -40,10 +41,17 @@ function App() {
   const handleSubmit = (e) => {
     e.preventDefault();
     setErrorMessage('');
-    api.post("/shorten", { url: newUrl })
+    
+    const endpoint = customCode.trim() ? '/shorten/custom' : '/shorten';
+    const payload = customCode.trim() 
+      ? { url: newUrl, shortCode: customCode.trim() }
+      : { url: newUrl };
+    
+    api.post(endpoint, payload)
     .then((response) => {
       fetchUrls();
       setNewUrl('');
+      setCustomCode('');
     })
     .catch((error) => {
       setErrorMessage(error.response?.data?.message || 'An error occurred');
@@ -79,7 +87,13 @@ function App() {
          type='text' 
          value={newUrl} 
          onChange={(e) => setNewUrl(e.target.value)} 
-         placeholder='Enter a URL'/>
+         placeholder='Enter a URL'
+         required/>
+        <input
+         type='text' 
+         value={customCode} 
+         onChange={(e) => setCustomCode(e.target.value)} 
+         placeholder='Custom short code (optional)'/>
          <button type="submit">Shorten</button>
       </form>
 
