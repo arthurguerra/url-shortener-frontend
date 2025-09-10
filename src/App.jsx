@@ -81,7 +81,12 @@ function App() {
       <table>
         <thead>
           <tr>
-            <th>Created At</th>
+            <th 
+              onClick={() => handleSort('createdAt')} 
+              style={{cursor: 'pointer', userSelect: 'none'}}
+            >
+              Created At {sorting.sortBy === 'createdAt' && (sorting.sortDirection === 'ASC' ? '↑' : '↓')}
+            </th>
             <th>Original URL</th>
             <th>Shortened URL</th>
             <th 
