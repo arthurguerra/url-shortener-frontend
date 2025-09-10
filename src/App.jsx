@@ -78,6 +78,16 @@ function App() {
     })
   }
 
+  const deleteUrl = (shortCode) => {
+    api.delete(`/link/${shortCode}`)
+    .then(() => {
+      fetchUrls();
+    })
+    .catch((error) => {
+      console.log('Delete error:', error);
+    })
+  }
+
   return (
     <div>
       <h1>URL Shortener</h1>
@@ -144,6 +154,11 @@ function App() {
                   disabled={url.clicks === 0}
                 >
                   View Logs
+                </button>
+                <button
+                onClick={() => deleteUrl(url.shortUrl)}
+                >
+                 Delete 
                 </button>
               </td>
             </tr>
