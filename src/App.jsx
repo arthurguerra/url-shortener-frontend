@@ -166,7 +166,13 @@ function App() {
           </form>
 
           {errorMessage && (
-            <div className="mt-4 p-4 bg-red-900 border border-red-700 rounded-md text-red-200">
+            <div className="mt-4 p-4 bg-red-900 border border-red-700 rounded-md text-red-200 relative">
+              <button 
+                onClick={() => setErrorMessage('')}
+                className="absolute top-2 right-2 text-red-300 hover:text-red-100 text-xl font-bold"
+              >
+                X
+              </button>
               {errorMessage}
             </div>
           )}
