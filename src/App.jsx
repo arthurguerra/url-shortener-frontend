@@ -72,6 +72,9 @@ function App() {
     api.get(`/log/${shortCode}`)
     .then((response) => {
       setSelectedLogs(response.data);
+      setTimeout(() => {
+        document.getElementById('logs-section')?.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
     })
     .catch((error) => {
       console.log('Logs error:', error);
@@ -259,7 +262,7 @@ function App() {
 
         {/* Logs Card */}
         {selectedLogs && (
-          <div className="bg-gray-800 border border-gray-700 rounded-lg p-6">
+          <div id="logs-section" className="bg-gray-800 border border-gray-700 rounded-lg p-6">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-semibold">Access Logs for {selectedLogs.shortUrl}</h2>
               <button 
