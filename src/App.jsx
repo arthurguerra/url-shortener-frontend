@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { Button } from "@/components/ui/button"
 import api from './api'
 
 function App() {
@@ -157,22 +158,23 @@ function App() {
               />
             </div>
             
-            <button 
+            <Button 
               type="submit"
               className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-md transition-colors duration-200"
             >
               Create Short URL
-            </button>
+            </Button>
           </form>
 
           {errorMessage && (
             <div className="mt-4 p-4 bg-red-900 border border-red-700 rounded-md text-red-200 relative">
-              <button 
+              <Button 
                 onClick={() => setErrorMessage('')}
+                size="sm"
                 className="absolute top-2 right-2 text-red-300 hover:text-red-100 text-xl font-bold"
               >
                 X
-              </button>
+              </Button>
               {errorMessage}
             </div>
           )}
@@ -229,19 +231,23 @@ function App() {
                     </td>
                     <td className="py-3 px-4 text-gray-300">{url.clicks}</td>
                     <td className="py-3 px-4 space-x-2">
-                      <button 
+                      <Button 
                         onClick={() => fetchLogs(url.shortUrl)}
                         disabled={url.clicks === 0}
+                        variant="secondary"
+                        size="sm"
                         className="bg-gray-700 hover:bg-gray-600 disabled:bg-gray-800 disabled:text-gray-500 text-white px-3 py-1 rounded text-sm transition-colors duration-200"
                       >
                         View Logs
-                      </button>
-                      <button
+                      </Button>
+                      <Button
                         onClick={() => deleteUrl(url.shortUrl)}
+                        variant="destructive"
+                        size="sm"
                         className="bg-red-700 hover:bg-red-600 text-white px-3 py-1 rounded text-sm transition-colors duration-200"
                       >
                         Delete
-                      </button>
+                      </Button>
                     </td>
                   </tr>
                 ))}
@@ -256,23 +262,23 @@ function App() {
             </div>
             
             <div className="flex items-center space-x-4">
-              <button 
+              <Button 
                 onClick={() => fetchUrls(pagination.page - 1, pagination.size)}
                 disabled={pagination.page === 0}
                 className="bg-gray-700 hover:bg-gray-600 disabled:bg-gray-800 disabled:text-gray-500 text-white px-3 py-1 rounded text-sm transition-colors duration-200"
               >
                 Previous
-              </button>
+              </Button>
               <span className="text-sm text-gray-300">
                 Page {pagination.page + 1} of {pagination.totalPages}
               </span>
-              <button 
+              <Button 
                 onClick={() => fetchUrls(pagination.page + 1, pagination.size)}
                 disabled={pagination.page >= pagination.totalPages - 1}
                 className="bg-gray-700 hover:bg-gray-600 disabled:bg-gray-800 disabled:text-gray-500 text-white px-3 py-1 rounded text-sm transition-colors duration-200"
               >
                 Next
-              </button>
+              </Button>
             </div>
             
             <div className="flex items-center space-x-2 text-sm">
@@ -296,7 +302,7 @@ function App() {
           <div id="logs-section" className="bg-gray-800 border border-gray-700 rounded-lg p-6">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-semibold">Access Logs for {selectedLogs.shortUrl}</h2>
-              <button 
+              <Button 
                 onClick={() => {
                   setSelectedLogs(null);
                   setAllLogs([]);
@@ -305,7 +311,7 @@ function App() {
                 className="bg-gray-700 hover:bg-gray-600 text-white px-3 py-1 rounded text-sm transition-colors duration-200"
               >
                 Close
-              </button>
+              </Button>
             </div>
             
             <div className="mb-4 p-4 bg-gray-700 rounded-md">
@@ -357,23 +363,23 @@ function App() {
                   </div>
                   
                   <div className="flex items-center space-x-4">
-                    <button 
+                    <Button 
                       onClick={() => setLogsPage(logsPage - 1)}
                       disabled={logsPage === 0}
                       className="bg-gray-700 hover:bg-gray-600 disabled:bg-gray-800 disabled:text-gray-500 text-white px-3 py-1 rounded text-sm transition-colors duration-200"
                     >
                       Previous
-                    </button>
+                    </Button>
                     <span className="text-sm text-gray-300">
                       Page {logsPage + 1} of {getTotalLogsPages()}
                     </span>
-                    <button 
+                    <Button 
                       onClick={() => setLogsPage(logsPage + 1)}
                       disabled={logsPage >= getTotalLogsPages() - 1}
                       className="bg-gray-700 hover:bg-gray-600 disabled:bg-gray-800 disabled:text-gray-500 text-white px-3 py-1 rounded text-sm transition-colors duration-200"
                     >
                       Next
-                    </button>
+                    </Button>
                   </div>
                   
                   <div className="flex items-center space-x-2 text-sm">
