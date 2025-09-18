@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import { Button } from "@/components/ui/button"
-import api from './api'
 import apiClient from './services/apiClient'
 
 function App() {
