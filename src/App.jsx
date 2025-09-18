@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Button } from "@/components/ui/button"
 import api from './api'
+import apiClient from './services/apiClient'
 
 function App() {
   const [urls, setUrls] = useState([])
@@ -27,20 +28,19 @@ function App() {
     fetchUrls();
   }, []);
 
-  const fetchUrls = (page = 0, size = 10, sortBy = sorting.sortBy, sortDirection = sorting.sortDirection) => {
-    api.get(`/links?page=${page}&size=${size}&sortBy=${sortBy}&sortDirection=${sortDirection}`)
-    .then((response) => {
-      setUrls(response.data.content);
+  const fetchUrls = async (page = 0, size = 10, sortBy = sorting.sortBy, sortDirection = sorting.sortDirection) => {
+    try {
+      const data = await apiClient.getUrls(page, size, sortBy, sortDirection)
+      setUrls(data.content)
       setPagination({
-        page: response.data.number,
-        size: response.data.size,
-        totalPages: response.data.totalPages,
-        totalElements: response.data.totalElements
-      });
-    })
-    .catch((error) => {
-      console.log('API error:', error);
-    })
+        page: data.number,
+        size: data.size,
+        totalPages: data.totalPages,
+        totalElements: data.totalElements
+      })
+    } catch (error) {
+      console.log('API error:', error)
+    }
   }
 
   const handleSubmit = (e) => {
