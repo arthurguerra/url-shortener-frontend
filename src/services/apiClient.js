@@ -16,6 +16,10 @@ const apiClient = {
     getLogs: async (shortCode) => {
         const response = await api.get(`/log/${shortCode}`)
         return response.data
+    },
+
+    deleteUrl: async (shortCode) => {
+        await api.delete(`/link/${shortCode}`)
     }
 }
 

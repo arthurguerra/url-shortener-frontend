@@ -100,14 +100,13 @@ function App() {
     return Math.ceil(allLogs.length / logsPageSize);
   }
 
-  const deleteUrl = (shortCode) => {
-    api.delete(`/link/${shortCode}`)
-    .then(() => {
-      getUrls();
-    })
-    .catch((error) => {
-      console.log('Delete error:', error);
-    })
+  const deleteUrl = async (shortCode) => {
+    try {
+      await apiClient.deleteUrl(shortCode)
+      getUrls()
+    } catch (error) {
+      console.log('Delete error:', error)
+    }
   }
 
   return (
