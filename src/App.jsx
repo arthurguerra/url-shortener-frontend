@@ -67,19 +67,18 @@ function App() {
     getUrls(0, pagination.size, field, newDirection);
   }
 
-  const fetchLogs = (shortCode) => {
-    api.get(`/log/${shortCode}`)
-    .then((response) => {
-      setSelectedLogs(response.data);
-      setAllLogs(response.data.logs);
+  const getLogs = async (shortCode) => {
+    try {
+      const logs = await apiClient.getLogs(shortCode)
+      setSelectedLogs(logs);
+      setAllLogs(logs.logs);
       setLogsPage(0);
       setTimeout(() => {
         document.getElementById('logs-section')?.scrollIntoView({ behavior: 'smooth' });
       }, 100);
-    })
-    .catch((error) => {
+    } catch (error) {
       console.log('Logs error:', error);
-    })
+    }
   }
 
   const getSortedLogs = () => {
@@ -226,7 +225,7 @@ function App() {
                     <td className="py-3 px-4 text-gray-300">{url.clicks}</td>
                     <td className="py-3 px-4 space-x-2">
                       <Button 
-                        onClick={() => fetchLogs(url.shortUrl)}
+                        onClick={() => getLogs(url.shortUrl)}
                         disabled={url.clicks === 0}
                         variant="secondary"
                         size="sm"

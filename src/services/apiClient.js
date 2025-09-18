@@ -11,6 +11,11 @@ const apiClient = {
         const payload = customCode ? { url, shortCode: customCode } : { url }
         const response = await api.post(endpoint, payload)
         return response.data
+    },
+
+    getLogs: async (shortCode) => {
+        const response = await api.get(`/log/${shortCode}`)
+        return response.data
     }
 }
 
