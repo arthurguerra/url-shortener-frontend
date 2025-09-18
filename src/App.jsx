@@ -25,10 +25,10 @@ function App() {
   const [logsSortDirection, setLogsSortDirection] = useState('DESC');
 
   useEffect(() => {
-    fetchUrls();
+    getUrls();
   }, []);
 
-  const fetchUrls = async (page = 0, size = 10, sortBy = sorting.sortBy, sortDirection = sorting.sortDirection) => {
+  const getUrls = async (page = 0, size = 10, sortBy = sorting.sortBy, sortDirection = sorting.sortDirection) => {
     try {
       const data = await apiClient.getUrls(page, size, sortBy, sortDirection)
       setUrls(data.content)
@@ -43,34 +43,28 @@ function App() {
     }
   }
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setErrorMessage('');
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setErrorMessage('')
     
-    const endpoint = customCode.trim() ? '/shorten/custom' : '/shorten';
-    const payload = customCode.trim() 
-      ? { url: newUrl, shortCode: customCode.trim() }
-      : { url: newUrl };
-    
-    api.post(endpoint, payload)
-    .then((response) => {
-      fetchUrls();
-      setNewUrl('');
-      setCustomCode('');
-    })
-    .catch((error) => {
-      setErrorMessage(error.response?.data?.message || 'An error occurred');
-    })
+    try {
+      await apiClient.createUrl(newUrl, customCode.trim() || null)
+      getUrls()
+      setNewUrl('')
+      setCustomCode('')
+    } catch (error) {
+      setErrorMessage(error.response?.data?.message || 'An error occurred')
+    }
   }
 
   const handlePageSizeChange = (newSize) => {
-    fetchUrls(0, newSize);
+    getUrls(0, newSize);
   }
 
   const handleSort = (field) => {
     const newDirection = sorting.sortBy === field && sorting.sortDirection === 'ASC' ? 'DESC' : 'ASC';
     setSorting({ sortBy: field, sortDirection: newDirection });
-    fetchUrls(0, pagination.size, field, newDirection);
+    getUrls(0, pagination.size, field, newDirection);
   }
 
   const fetchLogs = (shortCode) => {
@@ -110,7 +104,7 @@ function App() {
   const deleteUrl = (shortCode) => {
     api.delete(`/link/${shortCode}`)
     .then(() => {
-      fetchUrls();
+      getUrls();
     })
     .catch((error) => {
       console.log('Delete error:', error);
@@ -263,7 +257,7 @@ function App() {
             
             <div className="flex items-center space-x-4">
               <Button 
-                onClick={() => fetchUrls(pagination.page - 1, pagination.size)}
+                onClick={() => getUrls(pagination.page - 1, pagination.size)}
                 disabled={pagination.page === 0}
                 className="bg-gray-700 hover:bg-gray-600 disabled:bg-gray-800 disabled:text-gray-500 text-white px-3 py-1 rounded text-sm transition-colors duration-200"
               >
@@ -273,7 +267,7 @@ function App() {
                 Page {pagination.page + 1} of {pagination.totalPages}
               </span>
               <Button 
-                onClick={() => fetchUrls(pagination.page + 1, pagination.size)}
+                onClick={() => getUrls(pagination.page + 1, pagination.size)}
                 disabled={pagination.page >= pagination.totalPages - 1}
                 className="bg-gray-700 hover:bg-gray-600 disabled:bg-gray-800 disabled:text-gray-500 text-white px-3 py-1 rounded text-sm transition-colors duration-200"
               >
