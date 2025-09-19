@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { Button } from "@/components/ui/button"
 import apiClient from './services/apiClient'
 
@@ -25,9 +25,9 @@ function App() {
 
   useEffect(() => {
     getUrls();
-  }, []);
+  }, [getUrls]);
 
-  const getUrls = async (page = 0, size = 10, sortBy = sorting.sortBy, sortDirection = sorting.sortDirection) => {
+  const getUrls = useCallback(async (page = 0, size = 10, sortBy = sorting.sortBy, sortDirection = sorting.sortDirection) => {
     try {
       const data = await apiClient.getUrls(page, size, sortBy, sortDirection)
       setUrls(data.content)
@@ -40,7 +40,7 @@ function App() {
     } catch (error) {
       console.log('API error:', error)
     }
-  }
+  }, [sorting.sortBy, sorting.sortDirection])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
