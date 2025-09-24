@@ -13,7 +13,9 @@ function URLForm({ onUrlCreation }) {
 
     try {
       await apiClient.createUrl(newUrl, customCode.trim() || null);
-      onUrlCreation();
+      if (onUrlCreation) {
+        onUrlCreation();
+      }
       setNewUrl("");
       setCustomCode("");
     } catch (error) {
