@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button"
-import apiClient from "../services/apiClient";
+import { useUrls } from "@/UrlsContext";
 
-function URLForm({ onUrlCreation }) {
+function URLForm() {
+  const { createUrl } = useUrls();
   const [newUrl, setNewUrl] = useState("");
   const [customCode, setCustomCode] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
@@ -12,10 +13,7 @@ function URLForm({ onUrlCreation }) {
     setErrorMessage("");
 
     try {
-      await apiClient.createUrl(newUrl, customCode.trim() || null);
-      if (onUrlCreation) {
-        onUrlCreation();
-      }
+      await createUrl(newUrl, customCode.trim() || null);
       setNewUrl("");
       setCustomCode("");
     } catch (error) {

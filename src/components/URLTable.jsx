@@ -1,9 +1,10 @@
 import { useEffect, useState, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import apiClient from "../services/apiClient";
+import { useUrls } from "@/UrlsContext";
 
 function URLTable({ onViewLogs }) {
-  const [urls, setUrls] = useState([]);
+  const { urls, fetchUrls } = useUrls();
   const [pagination, setPagination] = useState({
     page: 0,
     size: 10,
@@ -15,16 +16,9 @@ function URLTable({ onViewLogs }) {
     sortDirection: "DESC",
   });
 
-  const getUrls = useCallback(
-    async (
-      page = 0,
-      size = 10,
-      sortBy = sorting.sortBy,
-      sortDirection = sorting.sortDirection
-    ) => {
+  const getUrls = async (page, size, sortBy, sortDirection) => {
       try {
-        const data = await apiClient.getUrls(page, size, sortBy, sortDirection);
-        setUrls(data.content);
+        const data = await fetchUrls(page, size, sortBy, sortDirection);
         setPagination({
           page: data.number,
           size: data.size,
@@ -34,13 +28,11 @@ function URLTable({ onViewLogs }) {
       } catch (error) {
         console.log("API error:", error);
       }
-    },
-    [sorting.sortBy, sorting.sortDirection]
-  );
+    }
 
     useEffect(() => {
-    getUrls();
-  }, [getUrls]);
+    fetchUrls();
+  }, [fetchUrls]);
 
   const handleSort = (field) => {
     const newDirection =

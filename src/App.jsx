@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button"
 import apiClient from './services/apiClient'
 import URLForm from './components/URLForm';
 import URLTable from './components/URLTable';
+import { UrlsProvider } from './UrlsContext';
 
 function App() {
   const tableRef = useRef()
@@ -51,9 +52,11 @@ function App() {
     <div className="min-h-screen bg-gray-900 text-white">
       <div className="max-w-6xl mx-auto p-6">
 
-        <URLForm onUrlCreation={() => tableRef.current?.refresh()} /> 
-
-        <URLTable ref={tableRef} onViewLogs={getLogs} />
+        <UrlsProvider>
+          <URLForm/>
+          <URLTable onViewLogs={getLogs} />
+        </UrlsProvider>
+        
 
         {/* Logs Card */}
         {selectedLogs && (
