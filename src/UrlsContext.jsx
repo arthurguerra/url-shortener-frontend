@@ -17,12 +17,17 @@ export function UrlsProvider({ children }) {
     fetchUrls();
   }
 
+  const deleteUrl = async (shortCode) => {
+    await apiClient.deleteUrl(shortCode);
+    fetchUrls();
+  }
+
   useEffect(() => {
     fetchUrls();
   }, []);
 
   return (
-    <UrlsContext.Provider value={{ urls, fetchUrls, createUrl }}>
+    <UrlsContext.Provider value={{ urls, fetchUrls, createUrl, deleteUrl }}>
       {children}
     </UrlsContext.Provider>
   );

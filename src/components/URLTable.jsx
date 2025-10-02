@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import apiClient from "../services/apiClient";
 import { useUrls } from "@/UrlsContext";
 
 function URLTable({ onViewLogs }) {
-  const { urls, fetchUrls } = useUrls();
+  const { urls, fetchUrls, deleteUrl } = useUrls();
   const [pagination, setPagination] = useState({
     page: 0,
     size: 10,
@@ -43,9 +42,9 @@ function URLTable({ onViewLogs }) {
     getUrls(0, pagination.size, field, newDirection);
   };
 
-  const deleteUrl = async (shortCode) => {
+  const handleDeleteUrl = async (shortCode) => {
     try {
-      await apiClient.deleteUrl(shortCode);
+      await deleteUrl(shortCode);
       getUrls();
     } catch (error) {
       console.log("Delete error:", error);
@@ -130,7 +129,7 @@ function URLTable({ onViewLogs }) {
                         View Logs
                       </Button>
                       <Button
-                        onClick={() => deleteUrl(url.shortUrl)}
+                        onClick={() => handleDeleteUrl(url.shortUrl)}
                         variant="destructive"
                         size="sm"
                         className="bg-red-700 hover:bg-red-600 text-white px-3 py-1 rounded text-sm transition-colors duration-200"
